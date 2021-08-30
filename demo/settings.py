@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'mult_tenant.tenant',
     'info',
-    # 'mult_tenant.proxy'
+    'mult_tenant.proxy'
 ]
 
 MIDDLEWARE = [

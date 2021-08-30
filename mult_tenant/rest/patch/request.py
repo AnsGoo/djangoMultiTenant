@@ -20,7 +20,6 @@ def __request_authenticate(self):
             self._authenticator = authenticator
             self.user, self.auth = user_auth_tuple
             if self.user and self.user.tenant:
-                print(self.user.tenant.code)
                 set_current_db(self.user.tenant.code)
             return
 

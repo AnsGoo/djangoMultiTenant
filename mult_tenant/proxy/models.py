@@ -84,5 +84,5 @@ class ProxyContentType(ContentType):
     objects = ContentTypeManager()
 
     class Meta:
-        # managed = False
+        managed = False
         proxy = True
