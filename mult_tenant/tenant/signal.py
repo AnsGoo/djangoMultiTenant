@@ -11,7 +11,7 @@ logger = logging.getLogger('django.request')
 
 
 @receiver(post_save, sender=Tenant)
-def create_data_handler(sender, signal, instance, created:bool, **kwargs):
+def create_data_handler(sender, signal, instance, created, **kwargs):
     if created:
         instance.create_database()
         logger.info(f'create database : [{instance.db_name}] successfuly for {instance.code}')
@@ -21,7 +21,7 @@ def create_data_handler(sender, signal, instance, created:bool, **kwargs):
         thread.start()
         
 
-def migrate(database):
+def migrate(database: str):
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

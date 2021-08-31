@@ -1,13 +1,15 @@
 import logging
+from typing import Dict
 from django.core.exceptions import ImproperlyConfigured
 from django.apps import apps as django_apps
+from django.db.models import Model
 from mult_tenant.const import DEFAULT_TENANT_MODEL
 from django.conf import settings
 logger = logging.getLogger('django.request')
 
 
 
-def get_tenant_model():
+def get_tenant_model() -> Model:
     """
     Return the User model that is active in this project.
     """
@@ -26,7 +28,7 @@ def get_tenant_model():
         )
 
 
-def get_tenant_db(alias):
+def get_tenant_db(alias: str) -> Dict[str,str]:
     Tenant = get_tenant_model()
     try:
         tenant  = Tenant.objects.using('default').filter(is_active=True).get(code=alias)
@@ -36,7 +38,7 @@ def get_tenant_db(alias):
         pass
 
 
-def get_all_tenant_db():
+def get_all_tenant_db() -> Dict[str,Dict]:
     Tenant = get_tenant_model()
     queryset  = Tenant.objects.using('default').filter(is_active=True)
     dbs = dict()

@@ -1,8 +1,9 @@
 from mult_tenant.utils.local import set_current_db
+from django.http.request import HttpRequest
 from django.contrib.auth.middleware import AuthenticationMiddleware, RemoteUserMiddleware, PersistentRemoteUserMiddleware
 
 class MultTenantAuthenticationMiddleware(AuthenticationMiddleware):
-    def process_request(self, request):
+    def process_request(self, request:HttpRequest):
         super().process_request(request)
         if hasattr(request,'user'):
             user = request.user
@@ -12,7 +13,7 @@ class MultTenantAuthenticationMiddleware(AuthenticationMiddleware):
 
 
 class MultTenantRemoteUserMiddleware(RemoteUserMiddleware):
-    def process_request(self, request):
+    def process_request(self, request:HttpRequest):
         super().process_request(request)
         if hasattr(request,'user'):
             user = request.user

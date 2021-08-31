@@ -16,7 +16,7 @@ class TenantAdmin(admin.ModelAdmin):
     list_display: Tuple = ('name', 'label', 'code', 'is_active')
     search_fields: Tuple = ('name', 'label', 'code')
     list_filter:Tuple = ('is_active', 'engine')
-    def get_readonly_fields(self, request:HttpRequest, obj: Model=None) -> Tuple:
+    def get_readonly_fields(self, request: HttpRequest, obj: Model=None) -> Tuple:
         if obj:
             return ("db_password",'db_name','engine', 'options') 
         return []

@@ -2,6 +2,7 @@ from typing import Dict, Any
 from .model import get_tenant_model
 
 from django.db.utils import load_backend
+from django.db.models import Model
 from django.conf import settings
 from mult_tenant.utils.local import get_current_db
 
@@ -38,19 +39,19 @@ class MutlTenantOriginConnection:
 
 
 class MultTenantDBRouter:
-    def db_for_read(self, model, **hints):
+    def db_for_read(self, model:Model, **hints) -> str:
         if model._meta.app_label in settings.DATABASE_APPS_MAPPING:
             return settings.DATABASE_APPS_MAPPING[model._meta.app_label]
 
         return get_current_db()
 
-    def db_for_write(self, model, **hints):
+    def db_for_write(self, model:Model, **hints):
         if model._meta.app_label in settings.DATABASE_APPS_MAPPING:
             return settings.DATABASE_APPS_MAPPING[model._meta.app_label]
 
         return get_current_db()
 
-    def allow_migrate(self, db, app_label, **hints):
+    def allow_migrate(self, db:str, app_label:str, **hints) -> bool:
 
         if app_label == 'contenttypes':
             return True
