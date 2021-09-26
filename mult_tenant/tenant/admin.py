@@ -7,12 +7,13 @@ from django.contrib.auth.admin import UserAdmin
 from mult_tenant.tenant.utils.model import get_tenant_model
 from django.db.models import Model
 from django.http.request import HttpRequest
+from .middleware.admin import SysModelAdminMix
 
 
 Tenant = get_tenant_model()
 
 @admin.register(Tenant)
-class TenantAdmin(admin.ModelAdmin):
+class TenantAdmin(SysModelAdminMix, admin.ModelAdmin):
     list_display: Tuple = ('name', 'label', 'code', 'is_active')
     search_fields: Tuple = ('name', 'label', 'code')
     list_filter:Tuple = ('is_active', 'engine')
@@ -26,7 +27,7 @@ class TenantAdmin(admin.ModelAdmin):
         return False
 
 @admin.register(UserModel)
-class MultTenancyUserAdmin(UserAdmin):
+class MultTenancyUserAdmin(SysModelAdminMix, UserAdmin):
 
 
     fieldsets = (
