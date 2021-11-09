@@ -9,6 +9,22 @@ logger = logging.getLogger('django.request')
 
 
 
+def get_tenant_user_model() -> Model:
+    """
+    Return the User model that is active in this project.
+    """
+    try:
+        default_tenant_model = settings.AUTH_TENANT_USER_MODEL
+        return django_apps.get_model(default_tenant_model, require_ready=False)
+    except ValueError:
+        logger.error("DEFAULT_TENANT_MODEL must be of the form 'app_label.model_name'")
+        raise ImproperlyConfigured("DEFAULT_TENANT_MODEL must be of the form 'app_label.model_name'")
+    except LookupError:
+        logger.error("DEFAULT_TENANT_MODEL refers to model '%s' that has not been installed" % settings.DEFAULT_TENANT_MODEL)
+        raise ImproperlyConfigured(
+            "DEFAULT_TENANT_MODEL refers to model '%s' that has not been installed" % settings.DEFAULT_TENANT_MODEL
+        )
+
 def get_tenant_model() -> Model:
     """
     Return the User model that is active in this project.
@@ -26,7 +42,6 @@ def get_tenant_model() -> Model:
         raise ImproperlyConfigured(
             "DEFAULT_TENANT_MODEL refers to model '%s' that has not been installed" % settings.DEFAULT_TENANT_MODEL
         )
-
 
 def get_tenant_db(alias: str) -> Dict[str,str]:
     Tenant = get_tenant_model()

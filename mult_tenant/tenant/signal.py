@@ -1,9 +1,9 @@
 from threading import Thread
-from mult_tenant.tenant.models import Tenant
+from mult_tenant.tenant.models import Tenant, GlobalUser
 from django.db.models.signals import post_save   # 另外一个内置的常用信号
 import logging
 from django.dispatch import receiver
-from mult_tenant.tenant.utils.model import get_tenant_model
+from mult_tenant.tenant.utils.model import get_tenant_model, get_tenant_user_model
 
 
 Tenant = get_tenant_model()
@@ -33,3 +33,11 @@ def migrate(database: str):
         ) from exc
     execute_from_command_line(['manage.py', 'multmigrate', f'--database={database}'])
     logger.error('migrate successfuly, create_table successfuly')
+
+@receiver(post_save, sender=GlobalUser)
+def assig_user_nhandler(sender, signal, instance, created, **kwargs):
+    if instance.tenant:
+        TenantUser = get_tenant_user_model()
+        TenantUser.objects.using(instance.tenant.code).get_or_create(
+            username=instance.username
+        )

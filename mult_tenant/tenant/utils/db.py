@@ -52,7 +52,6 @@ class MultTenantDBRouter:
         return get_current_db()
 
     def allow_migrate(self, db:str, app_label:str, **hints) -> bool:
-
         if app_label == 'contenttypes':
             return True
         app_db = settings.DATABASE_APPS_MAPPING.get(app_label)

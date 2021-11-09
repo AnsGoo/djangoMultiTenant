@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'mult_tenant.tenant.middleware.MultTenantAuthenticationMiddleware',
+    'mult_tenant.tenant.middleware.authentication.MultTenantAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -77,7 +77,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'demo.wsgi.application'
 
-AUTH_USER_MODEL = 'tenant.MultTenancyUser'
+AUTH_USER_MODEL = 'tenant.GlobalUser'
+AUTH_TENANT_USER_MODEL = 'info.User'
 DEFAULT_TENANT_MODEL = 'tenant.Tenant'
 # AUTHENTICATION_BACKENDS = ['mult_tenant.user.backend.MultTenantModelBackend']
 CORS_ALLOW_CREDENTIALS = True
@@ -92,7 +93,7 @@ CORS_ALLOW_HEADERS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'demo',
+        'NAME': 'demo2',
         'USER': 'root',
         'PASSWORD': os.environ.get('DB_PASSWORD', 'cwx568319'),
         'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
@@ -104,9 +105,8 @@ DATABASES = {
 
 DATABASE_APPS_MAPPING = {
     'tenant': 'default',
-    'contenttypes': 'default',
     'admin': 'default',
-    'auth': 'default',
+    # 'auth': 'default',
     'sessions': 'default'
 }
 

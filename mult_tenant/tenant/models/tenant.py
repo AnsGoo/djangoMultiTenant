@@ -1,12 +1,10 @@
-
 from datetime import datetime
 from typing import Dict, Tuple
 from django.db import models
-
-from django.contrib.auth.models import AbstractUser
 from mult_tenant.utils.pycrypt import crypt
 from mult_tenant.const import DEFAULT_DB_ENGINE_MAP
 from django.conf import settings
+
 
 DAFAULT_DB = settings.DATABASES['default']
 
@@ -149,20 +147,3 @@ class AbstractTenant(models.Model):
 class Tenant(AbstractTenant):
     pass
     
-
-class AbstractMultTenancyUser(AbstractUser):
-    tenant:str = models.ForeignKey(Tenant,to_field='code',on_delete=models.CASCADE, null=True, blank=True)
-
-
-    def __str__(self) -> str:
-        return f'{self.username}' 
-
-
-    class Meta:
-        verbose_name = '用户'
-        verbose_name_plural = '用户'
-        abstract = True
-
-
-class MultTenancyUser(AbstractMultTenancyUser):
-    pass
