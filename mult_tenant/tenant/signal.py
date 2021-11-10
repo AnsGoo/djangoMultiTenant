@@ -15,8 +15,6 @@ def create_data_handler(sender, signal, instance, created, **kwargs):
     if created:
         instance.create_database()
         logger.info(f'create database : [{instance.db_name}] successfuly for {instance.code}')
-
-
         thread = Thread(target=migrate,args=[instance.code])
         thread.start()
         
@@ -32,7 +30,7 @@ def migrate(database: str):
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(['manage.py', 'multmigrate', f'--database={database}'])
-    logger.error('migrate successfuly, create_table successfuly')
+    logger.info('migrate successfuly!')
 
 @receiver(post_save, sender=GlobalUser)
 def assig_user_nhandler(sender, signal, instance, created, **kwargs):
