@@ -134,17 +134,13 @@ class AbstractGlobalUser(models.Model):
         tenant_user_model = settings.AUTH_TENANT_USER_MODEL
         TenantUser = apps.get_model(tenant_user_model)
         if self.tenant:
-            # try:
-            tenant_user = TenantUser.objects.using(self.tenant.code).get(username=self.username)
-            result = tenant_user.has_perm(permission)
-            print(result)
-            # return result
-            if not result:
-                print(permission)
-            return result
-            # except Exception as e:
-            #     print(e)
-            #     return False
+            try:
+                tenant_user = TenantUser.objects.using(self.tenant.code).get(username=self.username)
+                result = tenant_user.has_perm(permission)
+                return result
+            except Exception as e:
+                print(e)
+                return False
         else:
             True
 

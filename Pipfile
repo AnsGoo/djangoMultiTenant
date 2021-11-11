@@ -9,8 +9,9 @@ django-cors-headers = "*"
 django-filter = "*"
 coreapi = "*"
 djangorestframework = "==3.12.4"
-django = "==3.2.4"
 pycryptodome = "==3.10.1"
+pdir2 = "*"
+django = "*"
 
 [dev-packages]
 
