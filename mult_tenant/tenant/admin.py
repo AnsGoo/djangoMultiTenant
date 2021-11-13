@@ -1,9 +1,9 @@
-from typing import Tuple
+from typing import Any, Tuple
 from mult_tenant.tenant.models import Tenant
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth.backends import UserModel
-from mult_tenant.tenant.utils.model import get_tenant_model
+from mult_tenant.tenant import get_tenant_model
 from django.db.models import Model
 from django.urls import path, reverse
 from django.http.request import HttpRequest
@@ -71,13 +71,17 @@ class GlobalUserAdmin(admin.ModelAdmin):
     list_filter = ('is_staff', 'is_super', 'is_active',)
     search_fields = ('username',)
     ordering = ('username',)
+    
+    def has_delete_permission(self, request: HttpRequest, obj: Model=None) -> bool:
+    	# 禁用删除按钮
+        return False
 
-    def get_fieldsets(self, request, obj=None):
+    def get_fieldsets(self, request: HttpRequest, obj:Model=None):
         if not obj:
             return self.add_fieldsets
         return super().get_fieldsets(request, obj)
 
-    def get_form(self, request, obj=None, **kwargs):
+    def get_form(self, request: HttpRequest, obj:Model=None, **kwargs):
         """
         Use special form during user creation
         """
@@ -96,17 +100,17 @@ class GlobalUserAdmin(admin.ModelAdmin):
             ),
         ] + super().get_urls()
 
-    def lookup_allowed(self, lookup, value):
+    def lookup_allowed(self, lookup:str, value:Any):
         # Don't allow lookups involving passwords.
         return not lookup.startswith('password') and super().lookup_allowed(lookup, value)
 
     @sensitive_post_parameters_m
     @csrf_protect_m
-    def add_view(self, request, form_url='', extra_context=None):
+    def add_view(self, request: HttpRequest, form_url:str = '', extra_context=None):
         with transaction.atomic(using=router.db_for_write(self.model)):
             return self._add_view(request, form_url, extra_context)
 
-    def _add_view(self, request, form_url='', extra_context=None):
+    def _add_view(self, request: HttpRequest, form_url:str = '', extra_context=None):
         # It's an error for a user to have add permission but NOT change
         # permission for users. If we allowed such users to add users, they
         # could create superusers, which would mean they would essentially have
@@ -127,7 +131,7 @@ class GlobalUserAdmin(admin.ModelAdmin):
         return super().add_view(request, form_url, extra_context)
 
     @sensitive_post_parameters_m
-    def user_change_password(self, request, id, form_url=''):
+    def user_change_password(self, request:HttpRequest, id:int, form_url:str=''):
         user = self.get_object(request, unquote(id))
         user = request.user
         if not (user.is_active and user.is_super): 
@@ -191,7 +195,7 @@ class GlobalUserAdmin(admin.ModelAdmin):
             context,
         )
 
-    def response_add(self, request, obj, post_url_continue=None):
+    def response_add(self, request: HttpRequest, obj: Model, post_url_continue=None):
         if '_addanother' not in request.POST and IS_POPUP_VAR not in request.POST:
             request.POST = request.POST.copy()
             request.POST['_continue'] = 1

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, Tuple
 from django.db import models
-from mult_tenant.utils.pycrypt import crypt
+from mult_tenant.tenant.utils.pycrypt import crypt
 from mult_tenant.const import DEFAULT_DB_ENGINE_MAP
 from django.conf import settings
 
@@ -54,7 +54,6 @@ class AbstractTenant(models.Model):
             if create_database_sql:
                 with connection.cursor() as cursor:
                     cursor.execute(create_database_sql)
-            
             return True
 
     class Meta:
@@ -66,14 +65,11 @@ class AbstractTenant(models.Model):
     
     def get_db_config(self) -> Dict:
         engine_name = self.engine.lower()
-        if hasattr(self,f'create_{engine_name}_dbconfig'):
-            return getattr(self,f'create_{engine_name}_dbconfig')()
+        if hasattr(self,f'_create_{engine_name}_dbconfig'):
+            return getattr(self,f'_create_{engine_name}_dbconfig')()
 
         else:
             raise NotImplementedError(f'create_{engine_name}_dbconfig is not implemente')
-
-
-
 
     def _create_common_dbconfig(self) -> Dict:
         password = DAFAULT_DB['PASSWORD']
@@ -95,7 +91,7 @@ class AbstractTenant(models.Model):
             }
     
 
-    def create_sqlite3_dbconfig(self) -> Dict:
+    def _create_sqlite3_dbconfig(self) -> Dict:
         engine = self.get_engine()
 
         return {
@@ -104,14 +100,14 @@ class AbstractTenant(models.Model):
             }
 
 
-    def create_mysql_dbconfig(self) -> Dict:
+    def _create_mysql_dbconfig(self) -> Dict:
         return self._create_common_dbconfig()
 
     
-    def create_posgrep_dbconfig(self) -> Dict:
+    def _create_posgrep_dbconfig(self) -> Dict:
         return self._create_common_dbconfig()
 
-    def create_oracle_dbconfig(self,) -> Dict:
+    def _create_oracle_dbconfig(self,) -> Dict:
         return self._create_common_dbconfig()
 
 
@@ -127,21 +123,21 @@ class AbstractTenant(models.Model):
     @property
     def create_database_sql(self) -> str:
         engine_name = self.engine.lower()
-        if hasattr(self,f'create_{engine_name}_database'):
-            return getattr(self,f'create_{engine_name}_database')()
+        if hasattr(self,f'_create_{engine_name}_database'):
+            return getattr(self,f'_create_{engine_name}_database')()
         else:
-            raise NotImplementedError(f'create_{engine_name}_database is not implemente')
+            raise NotImplementedError(f'_create_{engine_name}_database is not implemente')
 
-    def create_sqlite3_database(self) -> str:
+    def _create_sqlite3_database(self) -> str:
         pass
 
-    def create_mysql_database(self) -> str:
+    def _create_mysql_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
 
-    def create_posgrep_database(self) -> str:
+    def _create_posgrep_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
 
-    def create_oracle_database(self) -> str:
+    def _create_oracle_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
         
 class Tenant(AbstractTenant):

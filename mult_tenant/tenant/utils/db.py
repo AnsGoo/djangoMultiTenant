@@ -1,14 +1,15 @@
 from typing import Dict, Any
-from .model import get_tenant_model
-
+from mult_tenant.tenant import get_tenant_model
 from django.db.utils import load_backend
 from django.db.models import Model
 from django.conf import settings
-from mult_tenant.utils.local import get_current_db
+from mult_tenant.local import get_current_db
 
-Tenant = get_tenant_model()
+
 
 class MutlTenantOriginConnection:
+    
+    Tenant = get_tenant_model()
 
     def create_connection(self, tentant:Tenant, popname: bool=False):
         engine = tentant.get_engine()

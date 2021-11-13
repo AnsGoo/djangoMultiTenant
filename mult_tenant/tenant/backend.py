@@ -1,7 +1,7 @@
 from django.contrib.auth.backends import ModelBackend, UserModel
 from django.http.request import HttpRequest
 
-from mult_tenant.utils.local import set_current_db
+from mult_tenant.local import set_current_db
 
 class MultTenantModelBackend(ModelBackend) :
     def authenticate(self, request:HttpRequest, username: str=None, password: str=None, **kwargs) -> UserModel:

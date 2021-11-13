@@ -6,16 +6,16 @@ from django.conf import settings
 from django.contrib.auth.hashers import (
     check_password, make_password,
 )
-from mult_tenant.tenant.utils.model import get_tenant_model
+from mult_tenant.tenant import get_tenant_model
 
 
 
 class BaseUserManager(models.Manager):
 
-    def make_random_password(self, length=10,
-                             allowed_chars='abcdefghjkmnpqrstuvwxyz'
+    def make_random_password(self, length:int=10,
+                             allowed_chars:str='abcdefghjkmnpqrstuvwxyz'
                                            'ABCDEFGHJKLMNPQRSTUVWXYZ'
-                                           '23456789'):
+                                           '23456789') -> str:
         """
         Generate a random password with the given length and given
         allowed_chars. The default value of allowed_chars does not have "I" or
@@ -23,7 +23,7 @@ class BaseUserManager(models.Manager):
         """
         return get_random_string(length, allowed_chars)
 
-    def get_by_natural_key(self, username):
+    def get_by_natural_key(self, username:str) ->str:
         return self.get(**{self.model.USERNAME_FIELD: username})
 
 

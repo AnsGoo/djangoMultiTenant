@@ -3,7 +3,7 @@ from mult_tenant.tenant.models import Tenant, GlobalUser
 from django.db.models.signals import post_save   # 另外一个内置的常用信号
 import logging
 from django.dispatch import receiver
-from mult_tenant.tenant.utils.model import get_tenant_model, get_tenant_user_model
+from mult_tenant.tenant import get_tenant_model, get_tenant_user_model
 
 
 Tenant = get_tenant_model()

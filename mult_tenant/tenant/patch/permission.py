@@ -16,9 +16,6 @@ def create_permissions(app_config, verbosity=2, interactive=True, using=DEFAULT_
     if not app_config.models_module:
         return
 
-    # Ensure that contenttypes are created for this app. Needed if
-    # 'django.contrib.auth' is in INSTALLED_APPS before
-    # 'django.contrib.contenttypes'.
     create_contenttypes(app_config, verbosity=verbosity, interactive=interactive, using=using, apps=apps, **kwargs)
 
     app_label = app_config.label
