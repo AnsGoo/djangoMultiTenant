@@ -3,7 +3,7 @@ from django.db.utils import ConnectionHandler
 from mult_tenant.tenant import get_tenant_db
 logger = logging.getLogger('django.db.backends')
 
-def __connection_handler__getitem__(self, alias: str):
+def __connection_handler__getitem__(self, alias: str) -> ConnectionHandler:
     if isinstance(alias, str):
         try:
             return getattr(self._connections, alias)

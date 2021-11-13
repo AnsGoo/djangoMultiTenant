@@ -31,7 +31,7 @@ class BaseUserManager(models.Manager):
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, username, password, **extra_fields):
+    def _create_user(self, username:str, password:str, **extra_fields):
         if not username:
             raise ValueError('The given username must be set')
         # Lookup the real model class from the global app registry so this
@@ -96,10 +96,10 @@ class AbstractGlobalUser(models.Model):
 
 
     @classmethod
-    def normalize_username(cls, username):
+    def normalize_username(cls, username:str):
         return unicodedata.normalize('NFKC', username) if isinstance(username, str) else username
 
-    def check_password(self, raw_password):
+    def check_password(self, raw_password:str):
         """
         Return a boolean of whether the raw_password was correct. Handles
         hashing formats behind the scenes.
@@ -112,11 +112,11 @@ class AbstractGlobalUser(models.Model):
         return check_password(raw_password, self.password, setter)
 
     
-    def set_password(self, raw_password):
+    def set_password(self, raw_password:str):
         self.password = make_password(raw_password)
         self._password = raw_password
 
-    def has_module_perms(self, app_label) -> bool:
+    def has_module_perms(self, app_label:str) -> bool:
         # AUTH_TENANT_USER_MODEL
         common_applist = settings.DATABASE_APPS_MAPPING.keys()
         if self.tenant:
@@ -130,7 +130,7 @@ class AbstractGlobalUser(models.Model):
             else:
                 return  False
 
-    def has_perm(self, permission) -> bool:
+    def has_perm(self, permission:str) -> bool:
         tenant_user_model = settings.AUTH_TENANT_USER_MODEL
         TenantUser = apps.get_model(tenant_user_model)
         if self.tenant:

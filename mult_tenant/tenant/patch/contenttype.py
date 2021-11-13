@@ -1,27 +1,10 @@
 from django.apps import apps as global_apps
 from django.conf import settings
 from django.contrib.contenttypes import management
+from django.contrib.contenttypes.management import get_contenttypes_and_models
 from django.db import (
     DEFAULT_DB_ALIAS, router,
 )
-
-
-
-def get_contenttypes_and_models(app_config, using, ContentType):
-    if not router.allow_migrate_model(using, ContentType):
-        return None, None
-
-    ContentType.objects.clear_cache()
-
-    content_types = {
-        ct.model: ct
-        for ct in ContentType.objects.using(using).filter(app_label=app_config.label)
-    }
-    app_models = {
-        model._meta.model_name: model
-        for model in app_config.get_models()
-    }
-    return content_types, app_models
 
 
 def create_contenttypes(app_config, verbosity=2, interactive=True, using=DEFAULT_DB_ALIAS, apps=global_apps, **kwargs):
