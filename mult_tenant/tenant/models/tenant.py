@@ -9,6 +9,18 @@ from django.conf import settings
 DAFAULT_DB = settings.DATABASES['default']
 
 
+class TenantManager(models.Manager):
+    def create_tenant(self, code, name,**kwargs):
+        if not code:
+            raise ValueError('The given code must be set')
+        if not name:
+            raise ValueError('The given name must be set')
+        password = kwargs.pop('db_password',None)
+        tenant = self.model(code=code, name=name, **kwargs)
+        tenant.db_password = crypt.encrypt(password)
+        tenant.save(using=self._db)
+        return tenant
+
 class AbstractTenant(models.Model):
     Mysql, SQLite, Posgrep, Oracle = ('Mysql', 'SQLite', 'Posgrep', 'Oracle')
     engine_choices = (
@@ -21,13 +33,14 @@ class AbstractTenant(models.Model):
     name: str = models.CharField(max_length=20, unique=True)
     label: str = models.CharField(max_length=200)
     code: str = models.CharField(max_length=10, unique=True)
-    db_password: str = models.CharField(max_length=128,null=True, blank=True)
+    db_password: str = models.CharField(max_length=128, null=True, blank=True)
     db_name: str = models.CharField(max_length=50)
-    engine: str = models.CharField(max_length=10, null=True, choices=engine_choices)
+    engine: str = models.CharField(max_length=10, null=True, blank=True, choices=engine_choices)
     options: str = models.JSONField(null=True, blank=True)
     is_active: bool = models.BooleanField(default=True)
     _password = None
-
+    CODE_FIED = 'code'
+    objects = TenantManager()
 
     def __str__(self) -> str:
         return self.name
@@ -43,6 +56,8 @@ class AbstractTenant(models.Model):
     
     def delete(self, using: str, keep_parents: bool) -> Tuple[int, Dict[str, int]]:
         raise PermissionError(f'{self.code} can not delete')
+    
+    
 
     def create_database(self) -> bool:
         from mult_tenant.tenant.utils.db import MutlTenantOriginConnection
@@ -64,13 +79,21 @@ class AbstractTenant(models.Model):
 
     
     def get_db_config(self) -> Dict:
-        engine_name = self.engine.lower()
+        if self.engine:
+            engine_name = self.engine.lower()
+        else:
+            default_engine = DAFAULT_DB['ENGINE']
+            engine_name = self.inject_engine(default_engine)
         if hasattr(self,f'_create_{engine_name}_dbconfig'):
             return getattr(self,f'_create_{engine_name}_dbconfig')()
 
         else:
             raise NotImplementedError(f'create_{engine_name}_dbconfig is not implemente')
-
+    @staticmethod
+    def inject_engine(name):
+        for key ,value in DEFAULT_DB_ENGINE_MAP.items():
+            if name == value:
+                return key
     def _create_common_dbconfig(self) -> Dict:
         password = DAFAULT_DB['PASSWORD']
         engine = self.get_engine()

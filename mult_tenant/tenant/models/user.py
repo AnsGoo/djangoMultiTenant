@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import (
     check_password, make_password,
 )
-from mult_tenant.tenant import get_tenant_model
+from mult_tenant.tenant import get_common_apps, get_tenant_model, get_tenant_user_model
 
 
 
@@ -63,7 +63,7 @@ class AbstractGlobalUser(models.Model):
     is_super = models.BooleanField(default=False)
     tenant = models.ForeignKey(Tenant,to_field='code',on_delete=models.CASCADE, null=True, blank=True)
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['password']
     PASSWORD_FIELD = 'password'
     _password = None
 
@@ -117,8 +117,7 @@ class AbstractGlobalUser(models.Model):
         self._password = raw_password
 
     def has_module_perms(self, app_label:str) -> bool:
-        # AUTH_TENANT_USER_MODEL
-        common_applist = settings.DATABASE_APPS_MAPPING.keys()
+        common_applist = get_common_apps()
         if self.tenant:
             if app_label in common_applist:
                 return False
@@ -131,8 +130,7 @@ class AbstractGlobalUser(models.Model):
                 return  False
 
     def has_perm(self, permission:str) -> bool:
-        tenant_user_model = settings.AUTH_TENANT_USER_MODEL
-        TenantUser = apps.get_model(tenant_user_model)
+        TenantUser = get_tenant_user_model()
         if self.tenant:
             try:
                 tenant_user = TenantUser.objects.using(self.tenant.code).get(username=self.username)

@@ -37,5 +37,11 @@ def assig_user_nhandler(sender, signal, instance, created, **kwargs):
     if instance.tenant:
         TenantUser = get_tenant_user_model()
         TenantUser.objects.using(instance.tenant.code).get_or_create(
-            username=instance.username
+            defaults={
+                'is_active':instance.is_active,
+                'is_staff':instance.is_staff,
+                'is_superuser':instance.is_superuser
+                },
+            username=instance.username,
+            
         )

@@ -6,3 +6,4 @@ DEFAULT_DB_ENGINE_MAP = {
 }
 
 DEFAULT_TENANT_MODEL  = 'tenant.Tenant'
+AUTH_TENANT_USER_MODEL = 'auth.User'

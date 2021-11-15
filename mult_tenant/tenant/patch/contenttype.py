@@ -2,9 +2,9 @@ from django.apps import apps as global_apps
 from django.conf import settings
 from django.contrib.contenttypes import management
 from django.contrib.contenttypes.management import get_contenttypes_and_models
-from django.db import (
-    DEFAULT_DB_ALIAS, router,
-)
+from django.db import DEFAULT_DB_ALIAS
+
+from mult_tenant.tenant import get_common_apps
 
 
 def create_contenttypes(app_config, verbosity=2, interactive=True, using=DEFAULT_DB_ALIAS, apps=global_apps, **kwargs):
@@ -22,12 +22,11 @@ def create_contenttypes(app_config, verbosity=2, interactive=True, using=DEFAULT
         return
 
     
-    common_applist = settings.DATABASE_APPS_MAPPING.keys()
+    common_applist = get_common_apps()
     if app_config.name in common_applist:
         return None
 
     content_types, app_models = get_contenttypes_and_models(app_config, using, ContentType)
-    # print(app_models)
     if not app_models:
         return
 

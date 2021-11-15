@@ -11,6 +11,8 @@ from django.contrib.auth import management
 from django.contrib.auth import backends
 from django.conf import settings
 
+from mult_tenant.tenant import get_common_apps
+
 
 def create_permissions(app_config, verbosity=2, interactive=True, using=DEFAULT_DB_ALIAS, apps=global_apps, **kwargs):
     if not app_config.models_module:
@@ -26,7 +28,7 @@ def create_permissions(app_config, verbosity=2, interactive=True, using=DEFAULT_
     except LookupError:
         return
 
-    common_applist = settings.DATABASE_APPS_MAPPING.keys()
+    common_applist = get_common_apps()
     if app_config.name in common_applist:
         return
 
