@@ -1,12 +1,18 @@
 # DjangoMultTenant
 
-django 多租户方案的一个插件，本插件的是在数据库层对租户数据进行了隔离，保证每个租户只能访问自己的数据库信息
+django 多租户方案实现方案，本插件的是在数据库层对租户数据进行了隔离，保证每个租户只能访问自己的数据库信息，完整兼容django所有功能
 
 ## 安装
 
 ```shell
 pip install django-mult-tenant
 ```
+
+## 兼容性
+
+- django >= 3.2
+
+其他django版本未测试，不保证兼容性
 
 ## 配置
 
@@ -64,7 +70,7 @@ DATABASE_ROUTERS = ['mult_tenant.tenant.utils.db.MultTenantDBRouter']
 
 ### 数据库模块
 
-1. 默认`default`数据库为主数据库,只保存公共模块数据，租户数据库可以动态创建，创建一个租户，在数据库中创建了一个对应租户的数据库，所有租户的数据库结构相同
+1. 默认`default`数据库为主数据库,只保存公共模块数据，租户数据库可以动态创建，创建一个租户，会自动在数据库中创建了一个对应租户的数据库，所有租户的数据库结构相同
 
 2. 可以在`DATABASE_APPS_MAPPING`中指定某个`app`属于公共`app`,还是租户`app`,公共`app`默认数据库链接为`default`
 
