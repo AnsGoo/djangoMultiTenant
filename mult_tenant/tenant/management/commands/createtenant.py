@@ -93,7 +93,7 @@ class Command(BaseCommand):
             if not is_some_default:
                 database_engine = None
                 while True:
-                    input_value = input('database schema:')
+                    input_value = input('database schema: ')
                     error_msg = self._validate_database_engine(input_value, 'database schema')
                     if not error_msg:
                         database_engine = input_value
