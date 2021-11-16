@@ -23,7 +23,7 @@ class TenantManager(models.Manager):
         return tenant
 
 class AbstractTenant(models.Model):
-    Mysql, SQLite, Posgrep, Oracle = ('Mysql', 'SQLite', 'Posgrep', 'Oracle')
+    Mysql, SQLite, Posgrep, Oracle = ('Mysql', 'SQLite3', 'Posgrep', 'Oracle')
     engine_choices = (
         (Mysql, Mysql),
         (SQLite, SQLite),
