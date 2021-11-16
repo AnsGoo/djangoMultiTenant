@@ -58,10 +58,14 @@ def get_tenant_db(alias: str) -> Dict[str,str]:
 
 def get_all_tenant_db() -> Dict[str,Dict]:
     Tenant = get_tenant_model()
-    queryset  = Tenant.objects.using('default').filter(is_active=True)
     dbs = dict()
-    for tenant in queryset:
-        dbs[tenant.code] = tenant.get_db_config()
+    try:
+        queryset  = Tenant.objects.using('default').filter(is_active=True)
+        dbs = dict()
+        for tenant in queryset:
+            dbs[tenant.code] = tenant.get_db_config()
+    except:
+        pass
     return dbs
 
 def get_common_apps() ->List[str]:

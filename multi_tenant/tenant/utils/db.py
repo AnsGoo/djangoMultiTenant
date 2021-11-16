@@ -11,15 +11,16 @@ class MutlTenantOriginConnection:
     
     Tenant = get_tenant_model()
 
-    def create_connection(self, tentant:Tenant, popname: bool=False):
+    def create_connection(self, tentant:Tenant, popname: bool=False,**kwargs):
         engine = tentant.get_engine()
         backend = load_backend(engine)
         alias = tentant.code
         db_config = tentant.get_db_config()
         if popname:
             db_config.pop('NAME', None)
-        self.ensure_defaults(db_config)
-        return backend.DatabaseWrapper(db_config, alias)
+        db_config = { **db_config, **kwargs}
+        conn = self.ensure_defaults(db_config)
+        return backend.DatabaseWrapper(conn, alias)
 
     def ensure_defaults(self,conn: Dict) -> Dict[str,Any]:
         """

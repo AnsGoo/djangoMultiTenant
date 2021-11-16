@@ -13,10 +13,14 @@ logger = logging.getLogger('django.request')
 @receiver(post_save, sender=Tenant)
 def create_data_handler(sender, signal, instance, created, **kwargs):
     if created:
-        instance.create_database()
-        logger.info(f'create database : [{instance.db_name}] successfuly for {instance.code}')
-        thread = Thread(target=migrate,args=[instance.code])
-        thread.start()
+        try:
+            instance.create_database()
+            logger.info(f'create database : [{instance.db_name}] successfuly for {instance.code}')
+            thread = Thread(target=migrate,args=[instance.code])
+            thread.start()
+        except:
+            instance.delete(force=True)
+
         
 
 def migrate(database: str):

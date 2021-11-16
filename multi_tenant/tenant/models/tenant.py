@@ -23,11 +23,11 @@ class TenantManager(models.Manager):
         return tenant
 
 class AbstractTenant(models.Model):
-    Mysql, SQLite, Posgrep, Oracle = ('Mysql', 'SQLite3', 'Posgrep', 'Oracle')
+    Mysql, SQLite, Postgres, Oracle = ('Mysql', 'SQLite3', 'Postgres', 'Oracle')
     engine_choices = (
         (Mysql, Mysql),
         (SQLite, SQLite),
-        (Posgrep, Posgrep),
+        (Postgres, Postgres),
         (Oracle, Oracle),
     )
     create_date: datetime = models.DateTimeField(auto_now_add=True)
@@ -55,22 +55,27 @@ class AbstractTenant(models.Model):
                 self._password = None
                 self.save()
     
-    def delete(self, using: str, keep_parents: bool) -> Tuple[int, Dict[str, int]]:
-        raise PermissionError(f'{self.code} can not delete')
+    def delete(self, using: str, keep_parents: bool,force: bool = False) -> Tuple[int, Dict[str, int]]:
+        if force:
+            super().delete(using,keep_parents)
+        else:
+            raise PermissionError(f'{self.code} can not delete')
     
-    
-
     def create_database(self) -> bool:
         from multi_tenant.tenant.utils.db import MutlTenantOriginConnection
-        if self.engine == self.SQLite:
+        if self.engine.lower() == self.SQLite.lower():
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=False)
+            return True
+        elif self.engine.lower() == self.Postgres.lower():
+            connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=True, **{'NAME':'postgres'})
         else:
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=True)
-            create_database_sql = self.create_database_sql
-            if create_database_sql:
-                with connection.cursor() as cursor:
-                    cursor.execute(create_database_sql)
-            return True
+            
+        create_database_sql = self.create_database_sql
+        if create_database_sql:
+            with connection.cursor() as cursor:
+                cursor.execute(create_database_sql)
+        return True
 
     class Meta:
         db_table = 'auth_tenant'
@@ -128,7 +133,7 @@ class AbstractTenant(models.Model):
         return self._create_common_dbconfig()
 
     
-    def _create_posgrep_dbconfig(self) -> Dict:
+    def _create_postgres_dbconfig(self) -> Dict:
         return self._create_common_dbconfig()
 
     def _create_oracle_dbconfig(self,) -> Dict:
@@ -140,7 +145,7 @@ class AbstractTenant(models.Model):
         if self.engine:
             engine = DEFAULT_DB_ENGINE_MAP.get(self.engine.lower())
             if not engine:
-                raise ValueError(f'unkown engine {self.engine}, engine must be in f{list(DEFAULT_DB_ENGINE_MAP.keys())}')
+                raise ValueError(f'unkown engine {self.engine}, engine must be in {list(DEFAULT_DB_ENGINE_MAP.keys())}')
         return engine
         
             
@@ -158,8 +163,8 @@ class AbstractTenant(models.Model):
     def _create_mysql_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
 
-    def _create_posgrep_database(self) -> str:
-        return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
+    def _create_postgres_database(self) -> str:
+        return f"CREATE DATABASE {self.db_name} encoding='utf8';"
 
     def _create_oracle_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"

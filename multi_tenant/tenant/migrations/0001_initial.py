@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('code', models.CharField(max_length=10, unique=True)),
                 ('db_password', models.CharField(blank=True, max_length=128, null=True)),
                 ('db_name', models.CharField(max_length=50)),
-                ('engine', models.CharField(choices=[('Mysql', 'Mysql'), ('SQLite', 'SQLite'), ('Posgrep', 'Posgrep'), ('Oracle', 'Oracle')], max_length=10, null=True)),
+                ('engine', models.CharField(choices=[('Mysql', 'Mysql'), ('SQLite', 'SQLite'), ('Postgres', 'Postgres'), ('Oracle', 'Oracle')], max_length=10, null=True)),
                 ('options', models.JSONField(blank=True, null=True)),
                 ('is_active', models.BooleanField(default=True)),
             ],

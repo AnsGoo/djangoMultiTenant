@@ -7,7 +7,7 @@ import sys
 from django.core import exceptions
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.text import capfirst
-from mult_tenant.tenant import get_tenant_model
+from multi_tenant.tenant import get_tenant_model
 from django.conf import settings
 
 
@@ -136,7 +136,10 @@ class Command(BaseCommand):
                 tenant_data['db_name'] = tenant_data['name']
                 tenant_data['label'] = tenant_data['name']
             tenant = self.TenantModel._default_manager.db_manager('default').create_tenant(**tenant_data)
-            tenant.create_database()
+            try:
+                tenant.create_database()
+            except:
+                tenant.delete(force=True)
         except KeyboardInterrupt:
             self.stderr.write('\nOperation cancelled.')
             sys.exit(1)
