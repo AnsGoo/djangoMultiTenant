@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('README.rst', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
 setup(
-    name='django-mult-tenant',
+    name='django-multi-tenant',
     version='0.0.1',
     keywords=['python', 'django','mult-tenant'],
     description='Django multi tenant implementation',
