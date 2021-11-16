@@ -62,10 +62,12 @@ class AbstractTenant(models.Model):
 
     def create_database(self) -> bool:
         from multi_tenant.tenant.utils.db import MutlTenantOriginConnection
+        print(self.engine,'8'*8)
         if self.engine == self.SQLite:
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=False)
         else:
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=True)
+            print(connection)
             create_database_sql = self.create_database_sql
             if create_database_sql:
                 with connection.cursor() as cursor:
@@ -159,7 +161,7 @@ class AbstractTenant(models.Model):
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
 
     def _create_posgrep_database(self) -> str:
-        return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
+        return f"CREATE DATABASE {self.db_name} encoding 'UTF8';"
 
     def _create_oracle_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
