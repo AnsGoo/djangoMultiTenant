@@ -14,7 +14,7 @@ class TenantConfig(AppConfig):
         from .patch.contenttype import management
         from .patch.permission import management
         from .patch.user import User
-        dbs = list(get_all_tenant_db().keys())
-        for db in dbs:
-            connections[db]
+        # dbs = list(get_all_tenant_db().keys())
+        # for db in dbs:
+        #     connections[db]
         return super().ready()
