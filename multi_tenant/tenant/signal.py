@@ -37,7 +37,7 @@ def migrate(database: str):
     logger.info('migrate successfuly!')
 
 @receiver(post_save, sender=GlobalUser)
-def assig_user_nhandler(sender, signal, instance, created, **kwargs):
+def assign_user_handler(sender, signal, instance, created, **kwargs):
     if instance.tenant:
         TenantUser = get_tenant_user_model()
         TenantUser.objects.using(instance.tenant.code).get_or_create(
