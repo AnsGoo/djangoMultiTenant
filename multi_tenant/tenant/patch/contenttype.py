@@ -4,7 +4,7 @@ from django.contrib.contenttypes import management
 from django.contrib.contenttypes.management import get_contenttypes_and_models
 from django.db import DEFAULT_DB_ALIAS
 
-from mult_tenant.tenant import get_common_apps
+from multi_tenant.tenant import get_common_apps
 
 
 def create_contenttypes(app_config, verbosity=2, interactive=True, using=DEFAULT_DB_ALIAS, apps=global_apps, **kwargs):

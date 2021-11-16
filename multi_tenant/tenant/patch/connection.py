@@ -1,6 +1,6 @@
 import logging
 from django.db.utils import ConnectionHandler
-from mult_tenant.tenant import get_tenant_db
+from multi_tenant.tenant import get_tenant_db
 logger = logging.getLogger('django.db.backends')
 
 def __connection_handler__getitem__(self, alias: str) -> ConnectionHandler:

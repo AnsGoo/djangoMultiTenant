@@ -1,9 +1,9 @@
 from typing import Dict, Any
-from mult_tenant.tenant import get_tenant_model
+from multi_tenant.tenant import get_tenant_model
 from django.db.utils import load_backend
 from django.db.models import Model
 from django.conf import settings
-from mult_tenant.local import get_current_db
+from multi_tenant.local import get_current_db
 
 
 

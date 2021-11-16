@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import (
     check_password, make_password,
 )
-from mult_tenant.tenant import get_common_apps, get_tenant_model, get_tenant_user_model
+from multi_tenant.tenant import get_common_apps, get_tenant_model, get_tenant_user_model
 
 
 

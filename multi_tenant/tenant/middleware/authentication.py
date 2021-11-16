@@ -1,4 +1,4 @@
-from mult_tenant.local import set_current_db
+from multi_tenant.local import set_current_db
 from django.http.request import HttpRequest
 from django.contrib.auth.middleware import AuthenticationMiddleware, RemoteUserMiddleware, PersistentRemoteUserMiddleware
 

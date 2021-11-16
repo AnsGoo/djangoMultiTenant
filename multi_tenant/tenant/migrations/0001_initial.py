@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import mult_tenant.tenant.models.user
+import multi_tenant.tenant.models.user
 
 
 class Migration(migrations.Migration):
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
             managers=[
-                ('objects', mult_tenant.tenant.models.user.UserManager()),
+                ('objects', multi_tenant.tenant.models.user.UserManager()),
             ],
         ),
     ]

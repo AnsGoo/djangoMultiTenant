@@ -1,9 +1,9 @@
 from threading import Thread
-from mult_tenant.tenant.models import Tenant, GlobalUser
+from multi_tenant.tenant.models import Tenant, GlobalUser
 from django.db.models.signals import post_save   # 另外一个内置的常用信号
 import logging
 from django.dispatch import receiver
-from mult_tenant.tenant import get_tenant_model, get_tenant_user_model
+from multi_tenant.tenant import get_tenant_model, get_tenant_user_model
 
 
 Tenant = get_tenant_model()
@@ -29,7 +29,7 @@ def migrate(database: str):
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    execute_from_command_line(['manage.py', 'multmigrate', f'--database={database}'])
+    execute_from_command_line(['manage.py', 'migrate', f'--database={database}'])
     logger.info('migrate successfuly!')
 
 @receiver(post_save, sender=GlobalUser)

@@ -11,7 +11,7 @@ from django.contrib.auth import management
 from django.contrib.auth import backends
 from django.conf import settings
 
-from mult_tenant.tenant import get_common_apps
+from multi_tenant.tenant import get_common_apps
 
 
 def create_permissions(app_config, verbosity=2, interactive=True, using=DEFAULT_DB_ALIAS, apps=global_apps, **kwargs):

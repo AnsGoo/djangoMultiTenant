@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Dict, Tuple
 from django.db import models
-from mult_tenant.tenant.utils.pycrypt import crypt
-from mult_tenant.const import DEFAULT_DB_ENGINE_MAP
+from multi_tenant.tenant.utils.pycrypt import crypt
+from multi_tenant.const import DEFAULT_DB_ENGINE_MAP
 from django.conf import settings
 
 
@@ -17,7 +17,8 @@ class TenantManager(models.Manager):
             raise ValueError('The given name must be set')
         password = kwargs.pop('db_password',None)
         tenant = self.model(code=code, name=name, **kwargs)
-        tenant.db_password = crypt.encrypt(password)
+        if password:
+            tenant.db_password = crypt.encrypt(password)
         tenant.save(using=self._db)
         return tenant
 
@@ -60,7 +61,7 @@ class AbstractTenant(models.Model):
     
 
     def create_database(self) -> bool:
-        from mult_tenant.tenant.utils.db import MutlTenantOriginConnection
+        from multi_tenant.tenant.utils.db import MutlTenantOriginConnection
         if self.engine == self.SQLite:
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=False)
         else:

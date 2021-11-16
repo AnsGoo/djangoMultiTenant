@@ -31,7 +31,7 @@ class Command(MigrateCommand):
     @no_translations
     def handle(self, *args, **options):
         if options['all']:
-            from mult_tenant.tenant import get_all_tenant_db
+            from multi_tenant.tenant import get_all_tenant_db
             dbs = list(get_all_tenant_db().keys())
 
             for db in dbs:

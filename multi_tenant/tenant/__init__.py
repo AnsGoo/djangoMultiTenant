@@ -3,7 +3,7 @@ from typing import Dict, List
 from django.core.exceptions import ImproperlyConfigured
 from django.apps import apps as django_apps
 from django.db.models import Model
-from mult_tenant.const import DEFAULT_TENANT_MODEL, AUTH_TENANT_USER_MODEL
+from multi_tenant.const import DEFAULT_TENANT_MODEL, AUTH_TENANT_USER_MODEL
 from django.conf import settings
 logger = logging.getLogger('django.request')
 

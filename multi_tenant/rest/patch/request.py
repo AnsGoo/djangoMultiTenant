@@ -1,7 +1,7 @@
 from rest_framework.request import Request
 from rest_framework import exceptions
 
-from mult_tenant.local import set_current_db
+from multi_tenant.local import set_current_db
 
 
 def __request_authenticate(self):

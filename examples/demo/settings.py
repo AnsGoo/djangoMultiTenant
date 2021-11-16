@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'mult_tenant.tenant',
+    'multi_tenant.tenant',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'info',
-    'mult_tenant.proxy'
+    'multi_tenant.proxy'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'mult_tenant.tenant.middleware.authentication.MultTenantAuthenticationMiddleware',
+    'multi_tenant.tenant.middleware.authentication.MultTenantAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 AUTH_USER_MODEL = 'tenant.GlobalUser'
 AUTH_TENANT_USER_MODEL = 'info.User'
 DEFAULT_TENANT_MODEL = 'tenant.Tenant'
-# AUTHENTICATION_BACKENDS = ['mult_tenant.user.backend.MultTenantModelBackend']
+# AUTHENTICATION_BACKENDS = ['multi_tenant.user.backend.MultTenantModelBackend']
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_METHODS = ['*']
@@ -110,7 +110,7 @@ DATABASE_APPS_MAPPING = {
     'sessions': 'default'
 }
 
-DATABASE_ROUTERS = ['mult_tenant.tenant.utils.db.MultTenantDBRouter']
+DATABASE_ROUTERS = ['multi_tenant.tenant.utils.db.MultTenantDBRouter']
 
 
 REST_FRAMEWORK = {
@@ -119,7 +119,7 @@ REST_FRAMEWORK = {
     #     'rest_framework.authentication.SessionAuthentication'
     # ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'mult_tenant.rest.permissions.IsTanenatUser',
+        'multi_tenant.rest.permissions.IsTanenatUser',
     ],
     # 'DEFAULT_PAGINATION_CLASS': 'utils.pagination.CustomPagination',
     'PAGE_SIZE': None,

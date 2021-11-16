@@ -1,4 +1,4 @@
-DjangoMultTenant
+DjangoMultiTenant
 ================
 
 django
@@ -9,7 +9,7 @@ django
 
 .. code:: shell
 
-    pip install django-mult-tenant
+    pip install django-multi-tenant
 
 兼容性
 ------
@@ -25,7 +25,7 @@ django
 
 
     INSTALLED_APPS = [
-        'mult_tenant.tenant',
+        'multi_tenant.tenant',
         'django.contrib.admin',
         'django.contrib.auth',
         'django.contrib.contenttypes',
@@ -33,9 +33,9 @@ django
         'django.contrib.messages',
         'django.contrib.staticfiles',
         ...
-        'mult_tenant.proxy',
+        'multi_tenant.proxy',
         #  rest_framework 需要加载rest app
-        'mult_tenant.rest'
+        'multi_tenant.rest'
     ]
 
     MIDDLEWARE = [
@@ -46,7 +46,7 @@ django
         'django.middleware.csrf.CsrfViewMiddleware',
         # 需要注释调官方自带的AuthenticationMiddleware，采用插件的MultTenantAuthenticationMiddleware
         # 'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'mult_tenant.tenant.middleware.authentication.MultTenantAuthenticationMiddleware',
+        'multi_tenant.tenant.middleware.authentication.MultTenantAuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
@@ -68,7 +68,7 @@ django
     }
 
     ## 数据库映射路由
-    DATABASE_ROUTERS = ['mult_tenant.tenant.utils.db.MultTenantDBRouter']
+    DATABASE_ROUTERS = ['multi_tenant.tenant.utils.db.MultTenantDBRouter']
 
 主要模块说明以及使用
 --------------------
@@ -80,8 +80,8 @@ django
 
 2. 可以在\ ``DATABASE_APPS_MAPPING``\ 中指定某个\ ``app``\ 属于公共\ ``app``,还是租户\ ``app``,公共\ ``app``\ 默认数据库链接为\ ``default``
 
-``mult_tenant.tenant`` 多租户模块
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``multi_tenant.tenant`` 多租户模块
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. ``Tenant``\ 为租户模型，当然你可以继承\ ``AbstractTenant``\ 来自定义自己的租户模块，并在\ ``settings``\ 中指定\ ``DEFAULT_TENANT_MODEL``\ 常量来指定租户模型
 
@@ -94,13 +94,13 @@ django
 4. 可以登录Admin
    后台创建租户，也可以使用\ ``createtenant``\ 命令行来创建租户
 
-``mult_tenant.proxy`` 代理模块
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``multi_tenant.proxy`` 代理模块
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``ProxyContentType``\ contentType代理，因为在多租户模型中，主数据库和租户数据库数据模型不一样，在不断的迭代更新中，新的租户和老的租户模型\ ``ContentType``\ 数据信息也不一样，django默认自带的\ ``ContentType``\ 模型默认自带缓存，\ ``ProxyContentType``\ 模型无缓存，每次的数据访问都是直接访问数据库，这样避免了\ ``ContentType``\ 信息不一致导致的异常
 
-``mult_tenant.rest`` rest\_framework适配模块
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``multi_tenant.rest`` rest\_framework适配模块
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. 对\ ``rest_framework``\ 进行了适配,保证租户只能访问自己的租户的数据
 2. 提供了一个\ ``IsTanenatUser``\ 权限类，判断是不是租户用户
@@ -108,8 +108,8 @@ django
 ``migrate`` 模块
 ~~~~~~~~~~~~~~~~
 
-1. 提供了一个\ ``multmigrate``
-   命令来迁移租户数据库，参数\ ``--all``\ 可以一次迁移所有的租户数据，当然你也可以指定\ ``database``\ 来迁移某一个租户的数据库
+1. 迁移租户数据库，请给\ ``migrate`` 指定\ ``--database``\ 参数值,
+   ``--database``\ 参数值为租户编码
 
 支持的数据库
 ------------

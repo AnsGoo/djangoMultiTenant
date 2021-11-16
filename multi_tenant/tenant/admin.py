@@ -1,9 +1,9 @@
 from typing import Any, Tuple
-from mult_tenant.tenant.models import Tenant
+from multi_tenant.tenant.models import Tenant
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth.backends import UserModel
-from mult_tenant.tenant import get_tenant_model
+from multi_tenant.tenant import get_tenant_model
 from django.db.models import Model
 from django.urls import path, reverse
 from django.http.request import HttpRequest
