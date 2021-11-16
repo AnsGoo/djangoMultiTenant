@@ -63,19 +63,33 @@ class AbstractTenant(models.Model):
     
     def create_database(self) -> bool:
         from multi_tenant.tenant.utils.db import MutlTenantOriginConnection
+<<<<<<< HEAD
         if self.engine.lower() == self.SQLite.lower():
+=======
+        print(self.engine,'8'*8)
+        if self.engine == self.SQLite:
+>>>>>>> b4c51b64ef67f589ae6c6a51c52ed1fb01e3ec5d
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=False)
             return True
         elif self.engine.lower() == self.Postgres.lower():
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=True, **{'NAME':'postgres'})
         else:
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=True)
+<<<<<<< HEAD
             
         create_database_sql = self.create_database_sql
         if create_database_sql:
             with connection.cursor() as cursor:
                 cursor.execute(create_database_sql)
         return True
+=======
+            print(connection)
+            create_database_sql = self.create_database_sql
+            if create_database_sql:
+                with connection.cursor() as cursor:
+                    cursor.execute(create_database_sql)
+            return True
+>>>>>>> b4c51b64ef67f589ae6c6a51c52ed1fb01e3ec5d
 
     class Meta:
         db_table = 'auth_tenant'
@@ -163,8 +177,13 @@ class AbstractTenant(models.Model):
     def _create_mysql_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
 
+<<<<<<< HEAD
     def _create_postgres_database(self) -> str:
         return f"CREATE DATABASE {self.db_name} encoding='utf8';"
+=======
+    def _create_posgrep_database(self) -> str:
+        return f"CREATE DATABASE {self.db_name} encoding 'UTF8';"
+>>>>>>> b4c51b64ef67f589ae6c6a51c52ed1fb01e3ec5d
 
     def _create_oracle_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
