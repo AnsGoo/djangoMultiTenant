@@ -163,13 +163,8 @@ class AbstractTenant(models.Model):
     def _create_mysql_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
 
-<<<<<<< HEAD
-    def _create_postgres_database(self) -> str:
-        return f"CREATE DATABASE {self.db_name} encoding='utf8';"
-=======
     def _create_posgrep_database(self) -> str:
         return f"CREATE DATABASE {self.db_name} encoding 'UTF8';"
->>>>>>> b4c51b64ef67f589ae6c6a51c52ed1fb01e3ec5d
 
     def _create_oracle_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
