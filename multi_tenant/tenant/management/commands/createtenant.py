@@ -138,7 +138,8 @@ class Command(BaseCommand):
             tenant = self.TenantModel._default_manager.db_manager('default').create_tenant(**tenant_data)
             try:
                 tenant.create_database()
-            except:
+            except Exception as e:
+                self.stderr.write(e)
                 tenant.delete(force=True)
         except KeyboardInterrupt:
             self.stderr.write('\nOperation cancelled.')

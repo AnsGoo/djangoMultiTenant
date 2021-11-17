@@ -55,7 +55,7 @@ class AbstractTenant(models.Model):
                 self._password = None
                 self.save()
     
-    def delete(self, using: str, keep_parents: bool,force: bool = False) -> Tuple[int, Dict[str, int]]:
+    def delete(self, using: str=None, keep_parents: bool=False, force: bool = False) -> Tuple[int, Dict[str, int]]:
         if force:
             super().delete(using,keep_parents)
         else:
@@ -163,8 +163,8 @@ class AbstractTenant(models.Model):
     def _create_mysql_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
 
-    def _create_posgrep_database(self) -> str:
-        return f"CREATE DATABASE {self.db_name} encoding 'UTF8';"
+    def _create_postgres_database(self) -> str:
+        return f"CREATE DATABASE \"{self.db_name}\" encoding 'UTF8';"
 
     def _create_oracle_database(self) -> str:
         return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"

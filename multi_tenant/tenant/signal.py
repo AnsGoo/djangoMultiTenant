@@ -18,7 +18,8 @@ def create_data_handler(sender, signal, instance, created, **kwargs):
             logger.info(f'create database : [{instance.db_name}] successfuly for {instance.code}')
             thread = Thread(target=migrate,args=[instance.code])
             thread.start()
-        except:
+        except Exception as e:
+            logger.error(e)
             instance.delete(force=True)
 
         
