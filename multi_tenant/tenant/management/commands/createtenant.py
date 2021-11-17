@@ -104,7 +104,7 @@ class Command(BaseCommand):
                 others_required_fields = ['db_name','db_password','user','host', 'port']
                 option_fields = ['user','host', 'port']
                 if database_engine.lower() == 'sqlite3':
-                    others_required_fields = ['dbname']
+                    others_required_fields = ['db_name']
                 for field in others_required_fields:
                     if field.lower() == 'db_password':
                         while True:
