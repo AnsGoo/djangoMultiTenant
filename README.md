@@ -5,7 +5,7 @@ django 多租户方案实现方案，本插件的是在数据库层对租户数�
 ## 安装
 
 ```shell
-pip install django-multi-tenantcy
+pip install django-multi-tenancy
 ```
 
 ## 兼容性
