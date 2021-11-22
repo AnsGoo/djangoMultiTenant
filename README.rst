@@ -9,7 +9,7 @@ django
 
 .. code:: shell
 
-    pip install django-multi-tenant
+    pip install django-multi-tenancy
 
 兼容性
 ------

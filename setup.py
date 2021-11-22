@@ -3,14 +3,14 @@ from setuptools import setup, find_packages
 with open('README.rst', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
 setup(
-    name='django-multi-tenant',
-    version='0.1.1',
+    name='django-multi-tenancy',
+    version='0.1.3',
     keywords=['python', 'django','mult-tenant'],
     description='Django multi tenant implementation',
     long_description=long_description,
     long_description_content_type='text/markdown',
     license='MIT Licence', 
-    url='https://github.com/AnsGoo/djangoMultTenant',
+    url='https://github.com/AnsGoo/djangoMultiTenant',
     author='ansgoo',
     author_email='haiven_123@163.com',
     packages=find_packages(),
