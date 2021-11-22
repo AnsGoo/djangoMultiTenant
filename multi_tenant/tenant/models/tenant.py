@@ -167,7 +167,8 @@ class AbstractTenant(models.Model):
         return f"CREATE DATABASE \"{self.db_name}\" encoding 'UTF8';"
 
     def _create_oracle_database(self) -> str:
-        return f"CREATE DATABASE IF NOT EXISTS {self.db_name} character set utf8;"
+  
+        return f"CREATE DATABASE {self.db_name} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
         
 class Tenant(AbstractTenant):
     pass

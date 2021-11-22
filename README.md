@@ -95,18 +95,20 @@ DATABASE_ROUTERS = ['multi_tenant.tenant.utils.db.MultTenantDBRouter']
 
 1. 对`rest_framework`进行了适配,保证租户只能访问自己的租户的数据
 2. 提供了一个`IsTanenatUser`权限类，判断是不是租户用户
+3. 适配了`rest_framework`的内置权限`IsAdminUser`、`DjangoModelPermissions`、`DjangoModelPermissionsOrAnonReadOnly`、`DjangoObjectPermissions`
 
 
 
 ### `migrate` 模块
 
-1. 迁移租户数据库，请给`migrate` 指定`--database`参数值, `--database`参数值为租户编码
+1. 迁移租户数据库，请给`migrate` 指定`--database`参数值, `--database`
+2. 也可以使用‘multimigrate’,必须指定`--database`参数值，或者直接使用`--all`,来迁移所有租户表结构
 
 
 
 ## 支持的数据库
 
-适配了支持`django`所有支持的数据库（`SQLite`、`MySQL`、`Posgrep`、`Oracle`）
+适配了支持`django`所有支持的数据库（`SQLite3`、`MySQL`、`Posgres`、`Oracle`）
 
 
 ## 例子
