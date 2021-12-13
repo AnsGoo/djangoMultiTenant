@@ -38,7 +38,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    # 需要注释调官方自带的AuthenticationMiddleware，采用插件的MultTenantAuthenticationMiddleware
+    # 需要注释官方自带的AuthenticationMiddleware，采用插件的MultTenantAuthenticationMiddleware
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     'multi_tenant.tenant.middleware.authentication.MultTenantAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -102,7 +102,7 @@ DATABASE_ROUTERS = ['multi_tenant.tenant.utils.db.MultTenantDBRouter']
 ### `migrate` 模块
 
 1. 迁移租户数据库，请给`migrate` 指定`--database`参数值, `--database`
-2. 也可以使用‘multimigrate’,必须指定`--database`参数值，或者直接使用`--all`,来迁移所有租户表结构
+2. 也可以使用`multimigrate`,必须指定`--database`参数值，或者直接使用`--all`,来迁移所有租户表结构
 
 
 
