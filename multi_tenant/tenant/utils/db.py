@@ -1,43 +1,28 @@
-from typing import Dict, Any
 from multi_tenant.tenant import get_tenant_model
 from django.db.utils import load_backend
 from django.db.models import Model
 from django.conf import settings
 from multi_tenant.local import get_current_db
+from django.db.utils import ConnectionHandler
 
-
-
-class MutlTenantOriginConnection:
+class MutlTenantOriginConnection(ConnectionHandler):
+    '''
+    创建原始数据库连接
+    '''
     
     Tenant = get_tenant_model()
-
     def create_connection(self, tentant:Tenant, popname: bool=False,**kwargs):
+        '''
+        根据租户信息创建原始数据库连接
+        '''
         engine = tentant.get_engine()
-        backend = load_backend(engine)
         alias = tentant.code
         db_config = tentant.get_db_config()
         if popname:
-            db_config.pop('NAME', None)
-        db_config = { **db_config, **kwargs}
-        conn = self.ensure_defaults(db_config)
+            db_config['NAME'] = None
+        conn = { **db_config, **kwargs}
+        backend = load_backend(engine)
         return backend.DatabaseWrapper(conn, alias)
-
-    def ensure_defaults(self,conn: Dict) -> Dict[str,Any]:
-        """
-        Put the defaults into the settings dictionary for a given connection
-        where no settings is provided.
-        """
-        conn.setdefault('ATOMIC_REQUESTS', False)
-        conn.setdefault('AUTOCOMMIT', True)
-        conn.setdefault('ENGINE', 'django.db.backends.dummy')
-        if conn['ENGINE'] == 'django.db.backends.' or not conn['ENGINE']:
-            conn['ENGINE'] = 'django.db.backends.dummy'
-        conn.setdefault('CONN_MAX_AGE', 0)
-        conn.setdefault('OPTIONS', {})
-        conn.setdefault('TIME_ZONE', None)
-        for setting in ['NAME', 'USER', 'PASSWORD', 'HOST', 'PORT']:
-            conn.setdefault(setting, '')
-        return conn
 
 
 class MultTenantDBRouter:

@@ -70,8 +70,8 @@ class AbstractTenant(models.Model):
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=True, **{'NAME':'postgres'})
         else:
             connection = MutlTenantOriginConnection().create_connection(tentant=self, popname=True)
-            
         create_database_sql = self.create_database_sql
+
         if create_database_sql:
             with connection.cursor() as cursor:
                 cursor.execute(create_database_sql)
@@ -91,7 +91,7 @@ class AbstractTenant(models.Model):
             default_engine = DAFAULT_DB['ENGINE']
             engine_name = self.inject_engine(default_engine)
         if hasattr(self,f'_create_{engine_name}_dbconfig'):
-            return getattr(self,f'_create_{engine_name}_dbconfig')()
+            return self.configure_settings(getattr(self,f'_create_{engine_name}_dbconfig')())
 
         else:
             raise NotImplementedError(f'create_{engine_name}_dbconfig is not implemente')
@@ -169,7 +169,21 @@ class AbstractTenant(models.Model):
     def _create_oracle_database(self) -> str:
   
         return f"CREATE DATABASE {self.db_name} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
-        
+
+    def configure_settings(self, conn):
+        conn.setdefault('ATOMIC_REQUESTS', False)
+        conn.setdefault('AUTOCOMMIT', True)
+        conn.setdefault('ENGINE', 'django.db.backends.dummy')
+        if conn['ENGINE'] == 'django.db.backends.' or not conn['ENGINE']:
+            conn['ENGINE'] = 'django.db.backends.dummy'
+        conn.setdefault('CONN_MAX_AGE', 0)
+        conn.setdefault("CONN_HEALTH_CHECKS", False)
+        conn.setdefault('OPTIONS', {})
+        conn.setdefault('TIME_ZONE', None)
+        for setting in ['NAME', 'USER', 'PASSWORD', 'HOST', 'PORT']:
+            conn.setdefault(setting, '')
+        return conn
+
 class Tenant(AbstractTenant):
     pass
     
